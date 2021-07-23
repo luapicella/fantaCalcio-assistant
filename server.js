@@ -1,5 +1,6 @@
 'use strict';
 
+const path = require('path');
 const express = require('express');
 const morgan = require('morgan'); // logging middleware
 const socketIo = require("socket.io");
@@ -44,11 +45,13 @@ passport.deserializeUser((id, done) => {
 
 // init express
 const app = new express();
-const port = 3003;
+const port = process.env.PORT || 3001;
 
 // set-up the middlewares
 app.use(morgan('dev'));
 app.use(express.json());
+//ndicate Express how to serve static files
+app.use(express.static("./client/build"));
 
 
 // custom middleware: check if a given request is coming from an authenticated user
@@ -268,6 +271,11 @@ app.delete('/api/purchase/:id',
       .then(() => res.json({}))
       .catch(() => res.status(500).end());
   });
+
+// GET index.html
+app.get('*', (req, res) => {
+  res.redirect('index.html');
+});
 
 
 

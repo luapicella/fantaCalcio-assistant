@@ -1,1 +1,4 @@
-/Quotazioni_Fantacalcio.csv
+node_modules/
+.DS_Store
+Desktop.ini
+Thumbs.db
