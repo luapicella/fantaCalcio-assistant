@@ -1,0 +1,57 @@
+
+
+.below-nav {
+  padding-top: 5rem;
+}
+
+.list-group{
+  max-height: 715px;
+  margin-bottom: 10px;
+  overflow:scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+a{
+  color: #c8cbcf;
+}
+
+.nav-pills .nav-link.active{
+  background-color: #c8cbcf
+}
+
+.nav-role{
+  padding-bottom: 0.5rem;
+}
+
+.table-inf{
+  padding-top: 3rem;
+}
+
+.completed{
+  color: #96db80;
+}
+
+.credits-compl{
+  color: red;
+}
+
+.button-eye{
+  background-color: #49b58f;
+  border-color: #49b58f;
+}
+
+.button-eye:focus{
+  background-color: #49b58f;
+  border-color: #49b58f;
+}
+
+.button-eye:hover{
+  background-color: #248b8b;
+  border-color: #248b8b;
+}
+
+
+
+
+
+
