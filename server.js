@@ -43,8 +43,8 @@ passport.deserializeUser((id, done) => {
     });
 });
 
-// init express
-const app = new express();
+// init express 
+const app = new express();   
 const port = process.env.PORT || 3001;
 
 // set-up the middlewares
