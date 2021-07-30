@@ -14,7 +14,7 @@ function LoginForm(props) {
 
   /*form data*/
   const [username, setUsername] = useState('apc.luigi@gmail.com');
-  const [password, setPassword] = useState('1627');
+  const [password, setPassword] = useState('');
 
   /*route state*/
   const [submitted, setSubmitted] = useState(false);

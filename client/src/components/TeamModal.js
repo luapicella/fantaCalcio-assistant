@@ -14,6 +14,10 @@ const TeamModal = (props) => {
         setRole(role);
     }
 
+    useEffect(() => {
+        setRole('P')
+    }, [show])
+
     //total fantaMilion 
     let total = 0;
 
