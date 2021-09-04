@@ -73,7 +73,7 @@ const isNotPurchased = (req, res, next) => {
 
 // custom middleware: check if a given request is coming from an authenticated user
 const isCompleted = (req, res, next) => {
-  fantaDao.getNumberRole(req.body.fantaTeams, req.body.role)
+  fantaDao.getNumberRole(req.body.fantateams, req.body.role)
     .then(row => {
       let valid = true;
       switch (req.body.role) {
@@ -129,7 +129,7 @@ app.post('/api/sessions',
 
         // req.user contains the authenticated user
         return res.json(req.user);
-      });
+      });0
     })(req, res, next);
   });
 
@@ -229,24 +229,28 @@ app.post('/api/purchase',
   isCompleted,
   [
     check('id').isInt(),
-    check('fantaTeams').isInt(),
     check('role').isIn(['P', 'D', 'C', 'A']),
     check('price').isInt(),
   ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      const pur = {
+        id: req.body.id,
+        fantateams: req.body.fantateams,
+        role: req.body.role,
+        price: req.body.price,
+      };
+      console.log(pur)
       return res.status(422).json({ errors: errors.array() });
     }
 
 
     const purchase = {
       id: req.body.id,
-      fantaTeams: req.body.fantaTeams,
+      fantateams: req.body.fantateams,
       role: req.body.role,
       price: req.body.price,
     };
-
-
 
     fantaDao.addPurchase(purchase)
       .then(obj => res.status(201).json(obj).end())

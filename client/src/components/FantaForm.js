@@ -67,7 +67,7 @@ const FantaForm = (props) => {
 
         const purchase = {
             id: player.id,
-            fantaTeams: team,
+            fantateams: team,
             role: player.role,
             price: price,
         }

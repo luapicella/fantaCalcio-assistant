@@ -229,6 +229,15 @@ const Main = (props) => {
           </>
         } />
 
+        <Route exact path='/about'>
+          <Row className="justify-content-md-center">
+            <Col sm={6} className="below-nav" >
+              <h3>About</h3>
+              <p>FantaCalcio assistant is a simple and fast website that assists the fantacalcio auction . The list of players is provided by the following <a href="https://www.fantacalcio.it/quotazioni-fantacalcio">site.</a> <br /> <br /> FantaCalcio assistant is an open source project that you are free to contribute : <a href='https://github.com/luapicella/fantaCalcio-assistant'>https://github.com/luapicella/fantaCalcio-assistant.</a></p>
+            </Col>
+          </Row>
+        </Route>
+
         <Route path='/home' render={() => {
           return (
             <>
@@ -251,6 +260,7 @@ const Main = (props) => {
                   </Col>
                   : ''
                 }
+
 
                 <Col sm={6} className="below-nav">
 

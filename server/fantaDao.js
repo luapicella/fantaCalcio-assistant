@@ -3,33 +3,33 @@
 
 const db = require('./db');
 
-// get all fantaTeams and all informations
+// get all fantateams and all informations
 exports.getFantaTeams = () => {
   return new Promise((resolve, reject) => {
-    const sql = 'SELECT * FROM fantaTeams';
-    db.all(sql, [], (err, rows) => {
+    const sql = 'SELECT * FROM fantateams';
+    db.query(sql, (err, rows) => {
       if (err) {
         console.log(err)
         reject(err);
         return;
       }
-      const fantaTeams = rows.map((e) => ({ id: e.id, name: e.name, credits: e.credits, p: e.p, d: e.d, c: e.c, a: e.a }));
-      resolve(fantaTeams);
+      const fantateams = rows.rows.map((e) => ({ id: e.id, name: e.name, credits: e.credits, p: e.p, d: e.d, c: e.c, a: e.a }));
+      resolve(fantateams);
     });
-  });
+  });  
 };
 
 // get players with role = role
 exports.getPlayers = (role) => {
   return new Promise((resolve, reject) => {
-    const sql = 'SELECT * FROM player WHERE role=?';
-    db.all(sql, [role], (err, rows) => {
+    const sql = 'SELECT * FROM player WHERE role= $1';
+    db.query(sql, [role], (err, rows) => {
       if (err) {
         console.log(err)
         reject(err);
         return;
       }
-      const players = rows.map((e) => ({ ...e }));
+      const players = rows.rows.map((e) => ({ ...e }));
       resolve(players);
     });
   });
@@ -38,14 +38,14 @@ exports.getPlayers = (role) => {
 // get team with id = id
 exports.getFantaTeam = (id) => {
   return new Promise((resolve, reject) => {
-    const sql = 'SELECT pl.id id, pl.name name, pl.role role, pl.team team, p.price price FROM fantaTeams t, purchase p, player pl WHERE t.id = ? AND t.id = p.fantaTeams AND pl.id = p.id ';
-    db.all(sql, [id], (err, rows) => {
+    const sql = 'SELECT pl.id id, pl.name, pl.role, pl.team team, p.price price FROM fantateams t, purchase p, player pl WHERE t.id = $1 AND t.id = p.fantateams AND pl.id = p.id';
+    db.query(sql, [id], (err, rows) => {
       if (err) {
         console.log(err)
         reject(err);
         return;
       }
-      const team = rows.map((e) => ({ ...e }));
+      const team = rows.rows.map((e) => ({ ...e }));
       resolve(team);
     });
   });
@@ -54,30 +54,30 @@ exports.getFantaTeam = (id) => {
 // get team with id = id
 exports.getPurchased = (id) => {
   return new Promise((resolve, reject) => {
-    const sql = 'SELECT * FROM purchase WHERE id=? ';
-    db.all(sql, [id], (err, rows) => {
+    const sql = 'SELECT * FROM purchase WHERE id=$1 ';
+    db.query(sql, [id], (err, rows) => {
       if (err) {
         console.log(err)
         reject(err);
         return;
       }
-      const player = rows.map((e) => ({ ...e }));
+      const player = rows.rows.map((e) => ({ ...e }));
       resolve(player);
     });
   });
 };
 
 // get team with id = id
-exports.getNumberRole = (fantaTeams, role) => {
+exports.getNumberRole = (fantateams, role) => {
   return new Promise((resolve, reject) => {
-    const sql = 'SELECT p.id id FROM purchase p, player pl WHERE fantaTeams=? AND p.id = pl.id AND role=?  ';
-    db.all(sql, [fantaTeams, role], (err, rows) => {
+    const sql = 'SELECT p.id id FROM purchase p, player pl WHERE fantateams=$1 AND p.id = pl.id AND role=$2  ';
+    db.query(sql, [fantateams, role], (err, rows) => {
       if (err) {
         console.log(err)
         reject(err);
         return;
       }
-      const purchase = rows.map((e) => ({ ...e }));
+      const purchase = rows.rows.map((e) => ({ ...e }));
       resolve(purchase);
     });
   });
@@ -86,8 +86,8 @@ exports.getNumberRole = (fantaTeams, role) => {
 // add a new purchase
 exports.addPurchase = (purchase) => {
   return new Promise((resolve, reject) => {
-    const sql = 'INSERT INTO purchase(id, fantaTeams, price) VALUES (?,?,?)';
-    db.run(sql, [purchase.id, purchase.fantaTeams, purchase.price], function (err) {
+    const sql = 'INSERT INTO purchase(id, fantateams, price) VALUES ($1,$2,$3)';
+    db.query(sql, [purchase.id, purchase.fantateams, purchase.price], function (err) {
       if (err) {
         //console.log(err)
         reject(err);
@@ -96,8 +96,8 @@ exports.addPurchase = (purchase) => {
         // update team credits and role counter
         const props = { P: 0, D: 0, C: 0, A: 0 }
         props[purchase.role] += 1
-        const sql2 = 'UPDATE fantaTeams SET credits=credits-?, p=p+?, d=d+?, c=c+?, a=a+? WHERE id=?';
-        db.run(sql2, [purchase.price, props.P, props.D, props.C, props.A, purchase.fantaTeams], function (err) {
+        const sql2 = 'UPDATE fantateams SET credits=credits-$1, p=p+$2, d=d+$3, c=c+$4, a=a+$5 WHERE id=$6';
+        db.query(sql2, [purchase.price, props.P, props.D, props.C, props.A, purchase.fantateams], function (err) {
           if (err) {
             console.log(err)
             reject(err);
@@ -115,24 +115,24 @@ exports.addPurchase = (purchase) => {
 // delete an existing exam
 exports.deletePurchase = (id) => {
   return new Promise((resolve, reject) => {
-    const sql = 'SELECT fantaTeams, price, role FROM purchase p, player pl WHERE p.id = ? AND p.id = pl.id';
-    db.all(sql, [id], (err, rows) => {
+    const sql = 'SELECT fantateams, price, role FROM purchase p, player pl WHERE p.id = $1 AND p.id = pl.id';
+    db.query(sql, [id], (err, rows) => {
       if (err) {
         console.log(err);
         reject(err);
         return;
       } else {
         const props = { P: 0, D: 0, C: 0, A: 0 }
-        props[rows[0].role] += 1;
-        const sql3 = 'UPDATE fantaTeams SET credits=credits+?, p=p-?, d=d-?, c=c-?, a=a-? WHERE id=?';
-        db.run(sql3, [rows[0].price, props.P, props.D, props.C, props.A, rows[0].fantaTeams], (err) => {
+        props[rows.rows[0].role] += 1;
+        const sql3 = 'UPDATE fantateams SET credits=credits+$1, p=p-$2, d=d-$3, c=c-$4, a=a-$5 WHERE id=$6';
+        db.query(sql3, [rows.rows[0].price, props.P, props.D, props.C, props.A, rows.rows[0].fantateams], (err) => {
           if (err) {
             console.log(err);
             reject(err);
             return;
           } else {
-            const sql2 = 'DELETE FROM purchase WHERE id = ?';
-            db.run(sql2, [id], (err) => {
+            const sql2 = 'DELETE FROM purchase WHERE id = $1';
+            db.query(sql2, [id], (err) => {
               if (err) {
                 console.log(err);
                 reject(err);

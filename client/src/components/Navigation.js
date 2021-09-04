@@ -17,10 +17,9 @@ const Navigation = (props) => {
                 {loggedIn
                     ? <>
                         <Nav.Link as={Link} to='/home'>Home</Nav.Link>
-                        <Nav.Link as={Link} to='/settings'>Settings</Nav.Link>
                     </>
                     : ''}
-                <Nav.Link as={Link} to='/settings'>About</Nav.Link>
+                <Nav.Link as={Link} to='/about'>About</Nav.Link>
             </Nav>
 
             <Nav className="ml-auto justify-content-end">

@@ -60,7 +60,7 @@ const PlayerRowData = (props) => {
         <>
             <div className="flex-fill m-auto">{player.name}</div>
             <Badge className='mx-2 ' variant='light'>{player.team}</Badge>
-            <Badge variant='warning'>QI: 22</Badge>
+            <Badge variant='warning'>{player.qi}</Badge>
         </>
     );
 }
